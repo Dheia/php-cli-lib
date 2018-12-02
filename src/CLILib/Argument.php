@@ -31,4 +31,13 @@ class Argument
     {
         return $this->value;
     }
+
+    /**
+     * Returns the $value property when casting Argument to string
+     *
+     * @return string
+     */
+    public function __toString() {
+        return (string)$this->value;
+    }
 }
