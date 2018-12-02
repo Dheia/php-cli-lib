@@ -35,7 +35,7 @@ class Iterator implements \Iterator, \Countable
          */
         // 1 - Fixed <name> capturing group so it handles hyphens.
         preg_match_all(
-            '@(?:-{1,2}|\/)(?<name>[\w-]+)(?:[=:]?|\s+)(?<value>[^-\s"][^"]*?|"[^"]*")?(?=\s+[-/]|$)@i',
+            '@(?:-{1,2}|\/)(?<name>[\w-]+)(?:(?:[:=]|\s+)(?:(?<value>[^-\s"][^"\s]+)|(?:"(?<value_in_quotes>[^"]+?)")))?@i',
             $string,
             $matches,
             PREG_SET_ORDER
@@ -43,10 +43,15 @@ class Iterator implements \Iterator, \Countable
 
         foreach ($matches as $arg) {
             $name = $arg['name'];
-            $value = isset($arg['value'])
-                ? $arg['value']
-                : true
-            ;
+
+            $value = true;
+            if(isset($arg['value_in_quotes'])) {
+                $value = $arg['value_in_quotes'];
+
+            } elseif(isset($arg['value'])) {
+                $value = $arg['value'];
+            }
+
             $this->args[] = new CLILib\Argument($name, $value);
             $this->keys[] = $name;
         }

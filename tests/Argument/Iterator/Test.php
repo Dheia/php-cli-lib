@@ -16,10 +16,12 @@ class IteratorTest extends TestCase
             '--database myDB',
             '-h:local:host',
             '--lots-of-hyphens',
-            '--with-hyphen=alrighty',
+            '--with-hyphen="alrighty"',
+            '-j /var/path/to/some_interesting_file.json',
+            '-x "/var/path/to/some/otherfile.xml"'
         ], false);
 
-        $this->assertEquals(7, iterator_count($it));
+        $this->assertEquals(9, iterator_count($it));
         $this->assertTrue($it->find('hithere')->value());
         $this->assertEquals('cheese', $it->find('c')->value());
 
@@ -27,8 +29,12 @@ class IteratorTest extends TestCase
         $this->assertTrue($it->find('lots-of-hyphens')->value());
         $this->assertEquals('alrighty', $it->find('with-hyphen')->value());
 
+        $this->assertEquals('/var/path/to/some_interesting_file.json', $it->find('j')->value());
+
+        $this->assertEquals('/var/path/to/some/otherfile.xml', $it->find('x')->value());
+
         // Since iterator_count() was used, the iterator position should be at the end.
-        $this->assertEquals(7, $it->key());
+        $this->assertEquals(9, $it->key());
 
         // Return to start and check the first item is "hithere" with a value of true
         $it->rewind();
