@@ -1,6 +1,6 @@
 # PHP Command Line Interface (CLI) Library
 
-- Version: v1.0.1
+- Version: v1.0.2
 - Date: December 2nd 2018
 - [Release notes](https://github.com/pointybeard/php-cli-lib/blob/master/CHANGELOG.md)
 - [GitHub repository](https://github.com/pointybeard/php-cli-lib)
