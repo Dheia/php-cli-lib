@@ -1,7 +1,7 @@
 # PHP Command Line Interface (CLI) Library
 
-- Version: v1.0.2
-- Date: December 2nd 2018
+- Version: v1.1.0
+- Date: April 5th 2019
 - [Release notes](https://github.com/pointybeard/php-cli-lib/blob/master/CHANGELOG.md)
 - [GitHub repository](https://github.com/pointybeard/php-cli-lib)
 
@@ -9,7 +9,7 @@ Collection of helpful classes to use when working on the command line (cli).
 
 ## Installation
 
-This library is installed via [Composer](http://getcomposer.org/). To install, use `composer require pointybeard/php-cli-lib` or add `"pointybeard/php-cli-lib": "~1.0"` to your `composer.json` file.
+This library is installed via [Composer](http://getcomposer.org/). To install, use `composer require pointybeard/php-cli-lib` or add `"pointybeard/php-cli-lib": "~1.1"` to your `composer.json` file.
 
 And run composer to update your dependencies:
 
@@ -154,18 +154,10 @@ You can check that all code is passing by running the following command from the
 
     ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests/ArgumentsTest
 
-If you want to run code coverage (e.g. `--coverage-html tests/reports/ ...`) you'll need an older version of xdebug (for PHP 5.6). To install this, use the following commands:
+If you want to run code coverage (e.g. `--coverage-html tests/reports/ ...`) you'll to install xdebug:
 
     pecl channel-update pecl.php.net
-    pecl install xdebug-2.5.5
-
-You'll need enable `xdebug.so`. Try adding the following to `/etc/php/5.6/mods-available`
-
-    ; configuration for php xdebug module
-    ; priority=20
-    zend_extension=/usr/lib/php/20131226/xdebug.so
-
-Then enable it with `phpenmod xdebug`. The above works on Ubuntu, however, paths might be different for other distros.
+    pecl install xdebug
 
 ## Support
 
