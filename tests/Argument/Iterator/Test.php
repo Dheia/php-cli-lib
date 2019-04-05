@@ -49,7 +49,7 @@ class IteratorTest extends TestCase
     public function testEmptyArgumentArray()
     {
         $it = new Iterator([], false);
-        $this->assertFalse($it->find('hithere'));
+        $this->assertNull($it->find('hithere'));
         $this->assertEquals(0, $it->count());
     }
 
@@ -63,7 +63,7 @@ class IteratorTest extends TestCase
             '--hithere',
         ]);
         $this->assertEquals(1, iterator_count($it));
-        $this->assertFalse($it->find('../blah/blah'));
+        $this->assertNull($it->find('../blah/blah'));
     }
 
     /**
@@ -117,6 +117,6 @@ class IteratorTest extends TestCase
      */
     public function testInvalidFindArgumentArray($it)
     {
-        $this->assertFalse($it->find(['f', 'file']));
+        $this->assertNull($it->find(['f', 'file']));
     }
 }

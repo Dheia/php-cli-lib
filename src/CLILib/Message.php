@@ -64,13 +64,13 @@ class Message
         $this->dateFormat("H:i:s > ");
     }
 
-    public function message($message)
+    public function message($message) : self
     {
         $this->message = $message;
         return $this;
     }
 
-    public function foreground($colour)
+    public function foreground($colour) : self
     {
         if (!is_null($colour) && !array_key_exists($colour, self::$foregroundColours)) {
             throw new \Exception('No such foreground colour `'.$colour.'`');
@@ -79,7 +79,7 @@ class Message
         return $this;
     }
 
-    public function background($colour)
+    public function background($colour) : self
     {
         if (!is_null($colour) && !array_key_exists($colour, self::$backgroundColours)) {
             throw new \Exception('No such background colour `'.$colour.'`');
@@ -88,25 +88,25 @@ class Message
         return $this;
     }
 
-    public function prependDate($prependDate)
+    public function prependDate($prependDate) : self
     {
         $this->prependDate = $prependDate;
         return $this;
     }
 
-    public function dateFormat($format)
+    public function dateFormat($format) : self
     {
         $this->dateFormat = $format;
         return $this;
     }
 
-    public function appendNewLine($appendNewLine)
+    public function appendNewLine($appendNewLine) : self
     {
         $this->appendNewLine = $appendNewLine;
         return $this;
     }
 
-    public function display($target=STDOUT)
+    public function display($target=STDOUT) : bool
     {
         return fputs($target, (string)$this);
     }

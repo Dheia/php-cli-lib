@@ -10,7 +10,7 @@ class Prompt
      *
      * @return boolean true if the flag is set
      */
-    protected static function isFlagSet($flags, $flag)
+    protected static function isFlagSet($flags, $flag) : bool
     {
         // Flags support bitwise operators so it's easy to see
         // if one has been set.
@@ -34,7 +34,7 @@ class Prompt
      *                        for passwords. Only works if bash is avilable.
      * @return string
      */
-    public static function display($prompt, $flags = null, $default = null, \Closure $validator = null, $character = ":", $target=STDIN)
+    public static function display($prompt, $flags = null, $default = null, \Closure $validator = null, $character = ":", $target=STDIN) : string
     {
         $silent = self::isFlagSet($flags, self::FLAG_SILENT);
 
@@ -90,7 +90,7 @@ class Prompt
      *
      * @return bool
      */
-    protected static function canInvokeBash()
+    protected static function canInvokeBash() : bool
     {
         return (strcmp(trim(shell_exec("/usr/bin/env bash -c 'echo OK'")), 'OK') === 0);
     }

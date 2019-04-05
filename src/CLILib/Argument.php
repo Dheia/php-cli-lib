@@ -17,7 +17,7 @@ class Argument
      *
      * @return string
      */
-    public function name()
+    public function name() : string
     {
         return $this->name;
     }

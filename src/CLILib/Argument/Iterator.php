@@ -65,7 +65,7 @@ class Iterator implements \Iterator, \Countable
      * @param  string|array $name
      * @return array
      */
-    public function find($names)
+    public function find($names) : ?CLILib\Argument
     {
         if (!is_array($names)) {
             $names = [$names];
@@ -77,35 +77,35 @@ class Iterator implements \Iterator, \Countable
             };
         }
 
-        return false;
+        return null;
     }
 
-    public function rewind()
+    public function rewind() : void
     {
         $this->position = 0;
     }
 
-    public function current()
+    public function current() : CLILib\Argument
     {
         return $this->args[$this->position];
     }
 
-    public function key()
+    public function key() : int
     {
         return $this->position;
     }
 
-    public function next()
+    public function next() : void
     {
         ++$this->position;
     }
 
-    public function valid()
+    public function valid() : bool
     {
         return isset($this->args[$this->position]);
     }
 
-    public function count()
+    public function count() : int
     {
         return count($this->keys);
     }
