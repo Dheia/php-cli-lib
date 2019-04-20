@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace CLILib;
 
 class Message
@@ -6,49 +7,88 @@ class Message
     private $message = null;
     private $background = null;
     private $foreground = null;
-    private $prependDate = false;
     private $dateFormat = null;
-    private $appendNewLine = true;
+    private $flags = null;
+
+    const FLAG_PREPEND_DATE = 0x001;
+    const FLAG_APPEND_NEWLINE = 0x002;
+
+    const DEFAULT_DATE_FORMAT = "H:i:s > ";
 
     // Credit to JR from http://www.if-not-true-then-false.com/
     // for the code reponsible for colourising the messages
+    const FG_COLOUR_BLACK = '0;30';
+    const FG_COLOUR_RED = '0;31';
+    const FG_COLOUR_GREEN = '0;32';
+    const FG_COLOUR_BROWN = '0;33';
+    const FG_COLOUR_BLUE = '0;34';
+    const FG_COLOUR_PURPLE = '0;35';
+    const FG_COLOUR_CYAN = '0;36';
+    const FG_COLOUR_WHITE = '1;37';
+    const FG_COLOUR_DARK_GRAY = '1;30';
+    const FG_COLOUR_LIGHT_RED = '1;31';
+    const FG_COLOUR_LIGHT_GREEN = '1;32';
+    const FG_COLOUR_YELLOW = '1;33';
+    const FG_COLOUR_LIGHT_BLUE = '1;34';
+    const FG_COLOUR_LIGHT_PURPLE = '1;35';
+    const FG_COLOUR_LIGHT_CYAN = '1;36';
+    const FG_COLOUR_LIGHT_GRAY = '0;37';
+
+    const BG_COLOUR_BLACK = '40';
+    const BG_COLOUR_RED = '41';
+    const BG_COLOUR_GREEN = '42';
+    const BG_COLOUR_YELLOW = '43';
+    const BG_COLOUR_BLUE = '44';
+    const BG_COLOUR_MAGENTA = '45';
+    const BG_COLOUR_CYAN = '46';
+    const BG_COLOUR_DEFAULT = '49';
+    const BG_COLOUR_WHITE = '107';
+    const BG_COLOUR_LIGHT_GRAY = '47';
+    const BG_COLOUR_LIGHT_RED = '101';
+    const BG_COLOUR_LIGHT_GREEN = '102';
+    const BG_COLOUR_LIGHT_YELLOW = '103';
+    const BG_COLOUR_LIGHT_BLUE = '104';
+    const BG_COLOUR_LIGHT_MAGENTA = '105';
+    const BG_COLOUR_LIGHT_CYAN = '106';
+    const BG_COLOUR_DARK_GRAY = '100';
+
     private static $foregroundColours = [
-        'black'         => '0;30',
-        'red'           => '0;31',
-        'green'         => '0;32',
-        'brown'         => '0;33',
-        'blue'          => '0;34',
-        'purple'        => '0;35',
-        'cyan'          => '0;36',
-        'white'         => '1;37',
-        'dark gray'     => '1;30',
-        'light red'     => '1;31',
-        'light green'   => '1;32',
-        'yellow'        => '1;33',
-        'light blue'    => '1;34',
-        'light purple'  => '1;35',
-        'light cyan'    => '1;36',
-        'light gray'    => '0;37',
+        'black'         => self::FG_COLOUR_BLACK,
+        'red'           => self::FG_COLOUR_RED,
+        'green'         => self::FG_COLOUR_GREEN,
+        'brown'         => self::FG_COLOUR_BROWN,
+        'blue'          => self::FG_COLOUR_BLUE,
+        'purple'        => self::FG_COLOUR_PURPLE,
+        'cyan'          => self::FG_COLOUR_CYAN,
+        'white'         => self::FG_COLOUR_WHITE,
+        'dark gray'     => self::FG_COLOUR_DARK_GRAY,
+        'light red'     => self::FG_COLOUR_LIGHT_RED,
+        'light green'   => self::FG_COLOUR_LIGHT_GREEN,
+        'yellow'        => self::FG_COLOUR_YELLOW,
+        'light blue'    => self::FG_COLOUR_LIGHT_BLUE,
+        'light purple'  => self::FG_COLOUR_LIGHT_PURPLE,
+        'light cyan'    => self::FG_COLOUR_LIGHT_CYAN,
+        'light gray'    => self::FG_COLOUR_LIGHT_GRAY,
     ];
 
     private static $backgroundColours = [
-        'black'         => '40',
-        'red'           => '41',
-        'green'         => '42',
-        'yellow'        => '43',
-        'blue'          => '44',
-        'magenta'       => '45',
-        'cyan'          => '46',
-        'default'       => '49',
-        'white'         => '107',
-        'light gray'    => '47',
-        'light red'     => '101',
-        'light green'   => '102',
-        'light yellow'  => '103',
-        'light blue'    => '104',
-        'light magenta' => '105',
-        'light cyan'    => '106',
-        'dark gray'     => '100',
+        'black'         => self::BG_COLOUR_BLACK,
+        'red'           => self::BG_COLOUR_RED,
+        'green'         => self::BG_COLOUR_GREEN,
+        'yellow'        => self::BG_COLOUR_YELLOW,
+        'blue'          => self::BG_COLOUR_BLUE,
+        'magenta'       => self::BG_COLOUR_MAGENTA,
+        'cyan'          => self::BG_COLOUR_CYAN,
+        'default'       => self::BG_COLOUR_DEFAULT,
+        'white'         => self::BG_COLOUR_WHITE,
+        'light gray'    => self::BG_COLOUR_LIGHT_GRAY,
+        'light red'     => self::BG_COLOUR_LIGHT_RED,
+        'light green'   => self::BG_COLOUR_LIGHT_GREEN,
+        'light yellow'  => self::BG_COLOUR_LIGHT_YELLOW,
+        'light blue'    => self::BG_COLOUR_LIGHT_BLUE,
+        'light magenta' => self::BG_COLOUR_LIGHT_MAGENTA,
+        'light cyan'    => self::BG_COLOUR_LIGHT_CYAN,
+        'dark gray'     => self::BG_COLOUR_DARK_GRAY,
     ];
 
     public function __get($name)
@@ -56,57 +96,57 @@ class Message
         return $this->$name;
     }
 
-    public function __construct($message = null)
+    public function __construct(string $message = null)
     {
-        $this->message = $message;
-
-        // Seed the date format
-        $this->dateFormat("H:i:s > ");
+        $this->message($message);
+        $this->dateFormat(self::DEFAULT_DATE_FORMAT);
+        $this->flags(self::FLAG_PREPEND_DATE | self::FLAG_APPEND_NEWLINE);
+        $this->background(self::BG_COLOUR_DEFAULT);
     }
 
-    public function message($message) : self
+    public function message(string $message) : self
     {
         $this->message = $message;
         return $this;
     }
 
-    public function foreground($colour) : self
+    public function foreground(?string $colour) : self
     {
-        if (!is_null($colour) && !array_key_exists($colour, self::$foregroundColours)) {
-            throw new \Exception('No such foreground colour `'.$colour.'`');
+        if (!is_null($colour) && !isset(self::$foregroundColours[$colour])) {
+            throw new Exceptions\NoSuchColourException(
+                $colour,
+                array_key_exists($colour, self::$foregroundColours)
+            );
         }
         $this->foreground = $colour;
         return $this;
     }
 
-    public function background($colour) : self
+    public function background(?string $colour) : self
     {
-        if (!is_null($colour) && !array_key_exists($colour, self::$backgroundColours)) {
-            throw new \Exception('No such background colour `'.$colour.'`');
+        if (!is_null($colour) && !isset(self::$backgroundColours[$colour])) {
+            throw new Exceptions\NoSuchColourException(
+                $colour,
+                array_key_exists($colour, self::$backgroundColours)
+            );
         }
         $this->background = $colour;
         return $this;
     }
 
-    public function prependDate($prependDate) : self
-    {
-        $this->prependDate = $prependDate;
-        return $this;
-    }
-
-    public function dateFormat($format) : self
+    public function dateFormat(string $format) : self
     {
         $this->dateFormat = $format;
         return $this;
     }
 
-    public function appendNewLine($appendNewLine) : self
+    public function flags(?int $flags) : self
     {
-        $this->appendNewLine = $appendNewLine;
+        $this->flags = $flags;
         return $this;
     }
 
-    public function display($target=STDOUT) : bool
+    public function display(stream $target=STDOUT) : bool
     {
         return fputs($target, (string)$this);
     }
@@ -128,9 +168,23 @@ class Message
 
         return sprintf(
             '%s%s%s',
-            ($this->prependDate ? gmdate($this->dateFormat) : null),
+            (
+                is_flag_set($this->flags, self::FLAG_PREPEND_DATE)
+                    ? self::now($this->dateFormat)
+                    : null
+            ),
             (string)$message,
-            ($this->appendNewLine ? PHP_EOL : null)
+            (
+                is_flag_set($this->flags, self::FLAG_APPEND_NEWLINE)
+                    ? PHP_EOL
+                    : null
+            )
         );
+    }
+
+    private static function now(string $format = self::DEFAULT_DATE_FORMAT) : string
+    {
+        $date = new \DateTime();
+        return $date->format($format);
     }
 }
