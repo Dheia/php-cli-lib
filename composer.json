@@ -12,7 +12,10 @@
     "autoload": {
         "psr-4": {
             "CLILib\\": "src/CLILib"
-        }
+        },
+        "files": [
+            "src/Includes/Functions.php"
+        ]
     },
     "minimum-stability": "stable",
     "require": {
