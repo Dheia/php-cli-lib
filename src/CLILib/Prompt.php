@@ -1,21 +1,10 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace CLILib;
 
 class Prompt
 {
     const FLAG_SILENT = 0x001;
-
-    /**
-     * Convienence method for determining if a FLAG_* constant is set
-     *
-     * @return boolean true if the flag is set
-     */
-    protected static function isFlagSet($flags, $flag) : bool
-    {
-        // Flags support bitwise operators so it's easy to see
-        // if one has been set.
-        return ($flags & $flag) == $flag;
-    }
 
     /**
      * This function waits for input from $target (default is STDIN). Support
@@ -36,9 +25,9 @@ class Prompt
      */
     public static function display($prompt, $flags = null, $default = null, \Closure $validator = null, $character = ":", $target=STDIN) : string
     {
-        $silent = self::isFlagSet($flags, self::FLAG_SILENT);
+        $silent = is_flag_set($flags, self::FLAG_SILENT);
 
-        if ($silent == true && !self::canInvokeBash()) {
+        if ($silent == true && !can_invoke_bash()) {
             trigger_error("bash cannot be invoked from PHP so 'silent' flag cannot be used.", E_USER_NOTICE);
             $silent = false;
         }
@@ -62,36 +51,24 @@ class Prompt
 
             if ($silent) {
                 if ($target != STDIN) {
-                    throw new \Exception("cannot use silent prompt when target is not STDIN");
+                    throw new Exceptions\CLILibException(
+                        "Cannot use silent prompt unless target is STDIN"
+                    );
                 }
 
-                $command = "/usr/bin/env bash -c 'read -s in && echo \$in'";
-                $input = shell_exec($command);
+                $input = shell_exec("/usr/bin/env bash -c 'read -s in && echo \$in'");
                 echo PHP_EOL;
             } else {
                 $input = fgets($target, 256);
             }
 
             $input = trim($input);
+
             if (strlen(trim($input)) == 0 && !is_null($default)) {
                 $input = $default;
             }
         } while ($validator instanceof \Closure && !$validator($input));
 
         return $input;
-    }
-
-    /**
-     * Checks if bash can be invoked.
-     *
-     * Credit to Troels Knak-Nielsen
-     * (http://www.sitepoint.com/interactive-cli-password-prompt-in-php/) for
-     * inspiring this code.
-     *
-     * @return bool
-     */
-    protected static function canInvokeBash() : bool
-    {
-        return (strcmp(trim(shell_exec("/usr/bin/env bash -c 'echo OK'")), 'OK') === 0);
     }
 }
