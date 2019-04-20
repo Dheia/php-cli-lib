@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace CLILib;
 
 class Argument
@@ -37,7 +38,8 @@ class Argument
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return (string)$this->value;
     }
 }

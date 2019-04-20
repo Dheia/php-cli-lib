@@ -1,6 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace CLILib\Argument;
+
 use CLILib;
 
 class Iterator implements \Iterator, \Countable
@@ -45,10 +46,9 @@ class Iterator implements \Iterator, \Countable
             $name = $arg['name'];
 
             $value = true;
-            if(isset($arg['value_in_quotes'])) {
+            if (isset($arg['value_in_quotes'])) {
                 $value = $arg['value_in_quotes'];
-
-            } elseif(isset($arg['value'])) {
+            } elseif (isset($arg['value'])) {
                 $value = $arg['value'];
             }
 
